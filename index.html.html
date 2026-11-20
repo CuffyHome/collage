@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collage Studio | สร้างภาพคอลลาจหลายรูปแบบ (2-12 รูป)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Kanit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Kanit', 'Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-indigo-500 selection:text-white">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                    <i data-lucide="layout-grid" class="w-5 h-5 text-white"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg sm:text-xl tracking-tight bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+                        Collage Studio
+                    </h1>
+                    <p class="text-xs text-slate-400 hidden sm:block">รวมภาพความทรงจำ 2 - 12 ช่องให้เป็นหนึ่งเดียว</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2 sm:gap-3">
+                <button id="btn-upload-bulk" class="px-3 sm:px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-sm font-medium transition flex items-center gap-2 border border-slate-700 cursor-pointer">
+                    <i data-lucide="images" class="w-4 h-4 text-indigo-400"></i>
+                    <span id="bulk-btn-text" class="hidden sm:inline">อัปโหลดทีเดียว 8 รูป</span>
+                    <span class="sm:hidden">เลือกหลายรูป</span>
+                </button>
+                <button id="btn-download" class="px-4 sm:px-5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white text-sm font-semibold shadow-lg shadow-indigo-600/25 transition flex items-center gap-2 cursor-pointer">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>บันทึกรูปภาพ</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hidden File Inputs -->
+    <input type="file" id="bulk-file-input" accept="image/*" multiple class="hidden">
+    <input type="file" id="single-file-input" accept="image/*" class="hidden">
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 flex flex-col lg:flex-row gap-6 lg:gap-8">
+        
+        <!-- Left/Top: Controls Sidebar -->
+        <aside class="w-full lg:w-80 flex-shrink-0 flex flex-col gap-5 order-2 lg:order-1">
+            
+            <!-- Photo Count Selector Card -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+                <h2 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <i data-lucide="layers" class="w-4 h-4 text-indigo-400"></i>
+                    จำนวนรูปภาพ
+                </h2>
+                <div class="grid grid-cols-5 gap-2" id="count-options">
+                    <button data-count="2" class="count-btn py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer">2 รูป</button>
+                    <button data-count="3" class="count-btn py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer">3 รูป</button>
+                    <button data-count="4" class="count-btn py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer">4 รูป</button>
+                    <button data-count="5" class="count-btn py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer">5 รูป</button>
+                    <button data-count="6" class="count-btn py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer">6 รูป</button>
+                    <button data-count="7" class="count-btn py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer">7 รูป</button>
+                    <button data-count="8" class="count-btn py-2 rounded-xl text-xs font-semibold bg-indigo-600 text-white transition cursor-pointer">8 รูป</button>
+                    <button data-count="10" class="count-btn py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer">10 รูป</button>
+                    <button data-count="12" class="count-btn col-span-2 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer">12 รูป</button>
+                </div>
+            </div>
+
+            <!-- Layout Presets Card -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl">
+                <h2 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+                    <i data-lucide="grid" class="w-4 h-4 text-indigo-400"></i>
+                    <span id="layout-section-title">รูปแบบการจัดวาง (8 ช่อง)</span>
+                </h2>
+                <div class="grid grid-cols-2 gap-2.5" id="layout-options">
+                    <!-- Dynamic layout buttons will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Styling Controls Card -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col gap-4">
+                <h2 class="text-sm font-semibold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                    <i data-lucide="sliders" class="w-4 h-4 text-indigo-400"></i>
+                    ปรับแต่งกรอบและสีพื้นหลัง
+                </h2>
+
+                <!-- Aspect Ratio -->
+                <div>
+                    <label class="text-xs text-slate-400 block mb-2">สัดส่วนภาพ (Aspect Ratio)</label>
+                    <div class="grid grid-cols-3 gap-2" id="ratio-options">
+                        <button data-ratio="1:1" class="ratio-btn py-2 px-3 rounded-xl text-xs font-medium bg-indigo-600 text-white transition cursor-pointer">1:1 จัตุรัส</button>
+                        <button data-ratio="4:5" class="ratio-btn py-2 px-3 rounded-xl text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer">4:5 โพสต์ IG</button>
+                        <button data-ratio="16:9" class="ratio-btn py-2 px-3 rounded-xl text-xs font-medium bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer">16:9 แนวนอน</button>
+                    </div>
+                </div>
+
+                <!-- Gap / Spacing Slider -->
+                <div>
+                    <div class="flex justify-between text-xs mb-1.5">
+                        <span class="text-slate-400">ระยะห่างช่องไฟ (Gap)</span>
+                        <span id="gap-value" class="text-indigo-400 font-medium">16 px</span>
+                    </div>
+                    <input type="range" id="gap-slider" min="0" max="48" value="16" class="w-full accent-indigo-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+                </div>
+
+                <!-- Border Radius Slider -->
+                <div>
+                    <div class="flex justify-between text-xs mb-1.5">
+                        <span class="text-slate-400">ความโค้งมุมรูป (Radius)</span>
+                        <span id="radius-value" class="text-indigo-400 font-medium">16 px</span>
+                    </div>
+                    <input type="range" id="radius-slider" min="0" max="40" value="16" class="w-full accent-indigo-500 h-1.5 bg-slate-800 rounded-lg cursor-pointer">
+                </div>
+
+                <!-- Background Color Picker -->
+                <div>
+                    <label class="text-xs text-slate-400 block mb-2">สีพื้นหลัง / สีเส้นขอบ</label>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <button data-color="#ffffff" class="color-swatch w-7 h-7 rounded-full bg-white border-2 border-indigo-500 shadow-sm cursor-pointer" title="สีขาว"></button>
+                        <button data-color="#0f172a" class="color-swatch w-7 h-7 rounded-full bg-slate-900 border border-slate-700 cursor-pointer" title="สีดำเข้ม"></button>
+                        <button data-color="#f8fafc" class="color-swatch w-7 h-7 rounded-full bg-slate-50 border border-slate-300 cursor-pointer" title="สีควันบุหรี่"></button>
+                        <button data-color="#fef2f2" class="color-swatch w-7 h-7 rounded-full bg-rose-50 border border-rose-200 cursor-pointer" title="ชมพูพาสเทล"></button>
+                        <button data-color="#f0fdf4" class="color-swatch w-7 h-7 rounded-full bg-emerald-50 border border-emerald-200 cursor-pointer" title="เขียวมิ้นต์"></button>
+                        <button data-color="#fefce8" class="color-swatch w-7 h-7 rounded-full bg-amber-50 border border-amber-200 cursor-pointer" title="ครีมอบอุ่น"></button>
+                        <label class="w-7 h-7 rounded-full bg-gradient-to-tr from-pink-500 via-purple-500 to-indigo-500 flex items-center justify-center cursor-pointer overflow-hidden border border-slate-600" title="เลือกสีเอง">
+                            <input type="color" id="custom-color-picker" value="#ffffff" class="opacity-0 w-10 h-10 cursor-pointer">
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Action Utilities -->
+                <div class="pt-2 border-t border-slate-800 flex gap-2">
+                    <button id="btn-sample" class="flex-1 py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300 transition flex items-center justify-center gap-1.5 cursor-pointer">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+                        สุ่มภาพตัวอย่าง
+                    </button>
+                    <button id="btn-clear" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-rose-950/60 hover:text-rose-400 text-xs font-medium text-slate-400 transition flex items-center justify-center gap-1.5 cursor-pointer" title="ล้างรูปทั้งหมด">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Center/Right: Interactive Collage Preview Workspace -->
+        <section class="flex-1 flex flex-col items-center justify-center bg-slate-900/50 border border-slate-800/80 rounded-3xl p-4 sm:p-8 min-h-[450px] order-1 lg:order-2 relative overflow-hidden">
+            
+            <!-- Helper Instruction Banner -->
+            <div class="mb-4 text-center flex flex-wrap items-center justify-center gap-2 text-xs text-slate-400 bg-slate-900/90 px-4 py-2 rounded-full border border-slate-800">
+                <span class="flex items-center gap-1"><i data-lucide="mouse-pointer-click" class="w-3.5 h-3.5 text-indigo-400"></i> คลิกที่ช่องเพื่อเพิ่ม/เปลี่ยนรูป</span>
+                <span class="hidden sm:inline text-slate-600">•</span>
+                <span class="flex items-center gap-1"><i data-lucide="move" class="w-3.5 h-3.5 text-purple-400"></i> ลากสลับตำแหน่งระหว่างช่องได้</span>
+            </div>
+
+            <!-- The Collage Board (HTML Interactive Preview) -->
+            <div class="w-full flex items-center justify-center flex-1">
+                <div id="collage-board" 
+                     class="w-full max-w-[560px] aspect-square bg-white shadow-2xl transition-all duration-200 grid overflow-hidden select-none"
+                     style="padding: 16px; gap: 16px; border-radius: 12px;">
+                    <!-- 8 Cells will be injected dynamically by JS -->
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- Toast Notification Container (Replaces alert) -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Mobile / Fallback Image Save Modal -->
+    <div id="save-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden flex-col items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-3xl max-w-md w-full p-5 flex flex-col items-center gap-4 shadow-2xl">
+            <div class="w-full flex items-center justify-between">
+                <h3 class="font-semibold text-base text-white flex items-center gap-2">
+                    <i data-lucide="image" class="w-4 h-4 text-indigo-400"></i>
+                    ภาพคอลลาจของคุณพร้อมแล้ว!
+                </h3>
+                <button id="btn-close-modal" class="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition cursor-pointer">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            
+            <p class="text-xs text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-xl px-3 py-2 text-center w-full">
+                📱 <strong>สำหรับมือถือ:</strong> แตะค้างที่รูปภาพด้านล่าง แล้วเลือก <strong>"บันทึกลงรูปภาพ" (Save Image)</strong> ได้เลยครับ
+            </p>
+
+            <div class="w-full max-h-[55vh] overflow-auto rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-center p-2">
+                <img id="modal-preview-img" src="" alt="Collage Result" class="max-w-full h-auto rounded-xl shadow-lg">
+            </div>
+
+            <div class="w-full flex gap-2">
+                <button id="btn-native-share" class="hidden flex-1 py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition flex items-center justify-center gap-2 cursor-pointer">
+                    <i data-lucide="share" class="w-4 h-4"></i>
+                    แชร์ / บันทึกลงเครื่อง
+                </button>
+                <a id="btn-direct-download" href="#" download="collage.png" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold transition flex items-center justify-center gap-2 text-center">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    ดาวน์โหลดไฟล์
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden High-Res Canvas for Exporting Image -->
+    <canvas id="export-canvas" class="hidden"></canvas>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // Application State (Supports up to 12 images seamlessly)
+        const state = {
+            images: Array(12).fill(null),
+            imageUrls: Array(12).fill(null),
+            photoCount: 8,
+            layoutIndex: 0,
+            ratio: '1:1',    // '1:1' | '4:5' | '16:9'
+            gap: 16,
+            radius: 16,
+            bgColor: '#ffffff',
+            activeSlotIndex: null,
+            draggedSlotIndex: null
+        };
+
+        // Dynamic Layout Definitions for 2, 3, 4, 5, 6, 7, 8, 10, 12 photos
+        const LAYOUTS_BY_COUNT = {
+            2: [
+                {
+                    name: 'แบ่งครึ่งซ้าย-ขวา',
+                    cols: 2, rows: 1,
+                    cells: [
+                        { c: 1, cs: 1, r: 1, rs: 1 },
+                        { c: 2, cs: 1, r: 1, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'แบ่งครึ่งบน-ล่าง',
+                    cols: 1, rows: 2,
+                    cells: [
+                        { c: 1, cs: 1, r: 1, rs: 1 },
+                        { c: 1, cs: 1, r: 2, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'เด่นซ้าย 2:1',
+                    cols: 3, rows: 1,
+                    cells: [
+                        { c: 1, cs: 2, r: 1, rs: 1 },
+                        { c: 3, cs: 1, r: 1, rs: 1 }
+                    ]
+                }
+            ],
+            3: [
+                {
+                    name: 'เด่นซ้าย + 2 ขวา',
+                    cols: 2, rows: 2,
+                    cells: [
+                        { c: 1, cs: 1, r: 1, rs: 2 },
+                        { c: 2, cs: 1, r: 1, rs: 1 },
+                        { c: 2, cs: 1, r: 2, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'เด่นบน + 2 ล่าง',
+                    cols: 2, rows: 2,
+                    cells: [
+                        { c: 1, cs: 2, r: 1, rs: 1 },
+                        { c: 1, cs: 1, r: 2, rs: 1 },
+                        { c: 2, cs: 1, r: 2, rs: 1 }
+                    ]
+                },
+                {
+                    name: '3 คอลัมน์เรียง',
+                    cols: 3, rows: 1,
+                    cells: [
+                        { c: 1, cs: 1, r: 1, rs: 1 },
+                        { c: 2, cs: 1, r: 1, rs: 1 },
+                        { c: 3, cs: 1, r: 1, rs: 1 }
+                    ]
+                }
+            ],
+            4: [
+                {
+                    name: 'ตาราง 2x2 จัตุรัส',
+                    cols: 2, rows: 2,
+                    cells: [
+                        { c: 1, cs: 1, r: 1, rs: 1 },
+                        { c: 2, cs: 1, r: 1, rs: 1 },
+                        { c: 1, cs: 1, r: 2, rs: 1 },
+                        { c: 2, cs: 1, r: 2, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'Bento เด่นซ้าย',
+                    cols: 3, rows: 3,
+                    cells: [
+                        { c: 1, cs: 2, r: 1, rs: 3 },
+                        { c: 3, cs: 1, r: 1, rs: 1 },
+                        { c: 3, cs: 1, r: 2, rs: 1 },
+                        { c: 3, cs: 1, r: 3, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'Bento เด่นบน',
+                    cols: 3, rows: 2,
+                    cells: [
+                        { c: 1, cs: 3, r: 1, rs: 1 },
+                        { c: 1, cs: 1, r: 2, rs: 1 },
+                        { c: 2, cs: 1, r: 2, rs: 1 },
+                        { c: 3, cs: 1, r: 2, rs: 1 }
+                    ]
+                }
+            ],
+            5: [
+                {
+                    name: 'Bento เด่น 1 + 4 ย่อย',
+                    cols: 4, rows: 2,
+                    cells: [
+                        { c: 1, cs: 2, r: 1, rs: 2 },
+                        { c: 3, cs: 1, r: 1, rs: 1 },
+                        { c: 4, cs: 1, r: 1, rs: 1 },
+                        { c: 3, cs: 1, r: 2, rs: 1 },
+                        { c: 4, cs: 1, r: 2, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'บน 2 ล่าง 3',
+                    cols: 6, rows: 2,
+                    cells: [
+                        { c: 1, cs: 3, r: 1, rs: 1 },
+                        { c: 4, cs: 3, r: 1, rs: 1 },
+                        { c: 1, cs: 2, r: 2, rs: 1 },
+                        { c: 3, cs: 2, r: 2, rs: 1 },
+                        { c: 5, cs: 2, r: 2, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'โฟกัสกลาง 5 ช่อง',
+                    cols: 3, rows: 3,
+                    cells: [
+                        { c: 1, cs: 1, r: 1, rs: 2 },
+                        { c: 2, cs: 2, r: 1, rs: 1 },
+                        { c: 2, cs: 1, r: 2, rs: 1 },
+                        { c: 3, cs: 1, r: 2, rs: 2 },
+                        { c: 1, cs: 2, r: 3, rs: 1 }
+                    ]
+                }
+            ],
+            6: [
+                {
+                    name: 'ตาราง 3x2 แนวนอน',
+                    cols: 3, rows: 2,
+                    cells: [
+                        { c: 1, cs: 1, r: 1, rs: 1 },
+                        { c: 2, cs: 1, r: 1, rs: 1 },
+                        { c: 3, cs: 1, r: 1, rs: 1 },
+                        { c: 1, cs: 1, r: 2, rs: 1 },
+                        { c: 2, cs: 1, r: 2, rs: 1 },
+                        { c: 3, cs: 1, r: 2, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'ตาราง 2x3 แนวตั้ง',
+                    cols: 2, rows: 3,
+                    cells: [
+                        { c: 1, cs: 1, r: 1, rs: 1 },
+                        { c: 2, cs: 1, r: 1, rs: 1 },
+                        { c: 1, cs: 1, r: 2, rs: 1 },
+                        { c: 2, cs: 1, r: 2, rs: 1 },
+                        { c: 1, cs: 1, r: 3, rs: 1 },
+                        { c: 2, cs: 1, r: 3, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'Bento ไฮไลต์ 6 ช่อง',
+                    cols: 3, rows: 3,
+                    cells: [
+                        { c: 1, cs: 2, r: 1, rs: 2 },
+                        { c: 3, cs: 1, r: 1, rs: 1 },
+                        { c: 3, cs: 1, r: 2, rs: 1 },
+                        { c: 1, cs: 1, r: 3, rs: 1 },
+                        { c: 2, cs: 1, r: 3, rs: 1 },
+                        { c: 3, cs: 1, r: 3, rs: 1 }
+                    ]
+                }
+            ],
+            7: [
+                {
+                    name: 'Bento เด่นมุมบน',
+                    cols: 4, rows: 3,
+                    cells: [
+                        { c: 1, cs: 2, r: 1, rs: 2 },
+                        { c: 3, cs: 2, r: 1, rs: 1 },
+                        { c: 3, cs: 1, r: 2, rs: 1 },
+                        { c: 4, cs: 1, r: 2, rs: 1 },
+                        { c: 1, cs: 1, r: 3, rs: 1 },
+                        { c: 2, cs: 1, r: 3, rs: 1 },
+                        { c: 3, cs: 2, r: 3, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'บน 3 ล่าง 4',
+                    cols: 12, rows: 2,
+                    cells: [
+                        { c: 1, cs: 4, r: 1, rs: 1 },
+                        { c: 5, cs: 4, r: 1, rs: 1 },
+                        { c: 9, cs: 4, r: 1, rs: 1 },
+                        { c: 1, cs: 3, r: 2, rs: 1 },
+                        { c: 4, cs: 3, r: 2, rs: 1 },
+                        { c: 7, cs: 3, r: 2, rs: 1 },
+                        { c: 10, cs: 3, r: 2, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'โมเสกสมดุล 7 ช่อง',
+                    cols: 3, rows: 3,
+                    cells: [
+                        { c: 1, cs: 1, r: 1, rs: 1 },
+                        { c: 2, cs: 1, r: 1, rs: 1 },
+                        { c: 3, cs: 1, r: 1, rs: 1 },
+                        { c: 1, cs: 1, r: 2, rs: 2 },
+                        { c: 2, cs: 2, r: 2, rs: 1 },
+                        { c: 2, cs: 1, r: 3, rs: 1 },
+                        { c: 3, cs: 1, r: 3, rs: 1 }
+                    ]
+                }
+            ],
+            8: [
+                {
+                    name: 'Bento ไฮไลต์',
+                    cols: 4, rows: 3,
+                    cells: [
+                        { c: 1, cs: 2, r: 1, rs: 2 },
+                        { c: 3, cs: 1, r: 1, rs: 1 },
+                        { c: 4, cs: 1, r: 1, rs: 1 },
+                        { c: 3, cs: 1, r: 2, rs: 1 },
+                        { c: 4, cs: 1, r: 2, rs: 1 },
+                        { c: 1, cs: 1, r: 3, rs: 1 },
+                        { c: 2, cs: 1, r: 3, rs: 1 },
+                        { c: 3, cs: 2, r: 3, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'ตาราง 4x2 แนวนอน',
+                    cols: 4, rows: 2,
+                    cells: [
+                        { c: 1, cs: 1, r: 1, rs: 1 },
+                        { c: 2, cs: 1, r: 1, rs: 1 },
+                        { c: 3, cs: 1, r: 1, rs: 1 },
+                        { c: 4, cs: 1, r: 1, rs: 1 },
+                        { c: 1, cs: 1, r: 2, rs: 1 },
+                        { c: 2, cs: 1, r: 2, rs: 1 },
+                        { c: 3, cs: 1, r: 2, rs: 1 },
+                        { c: 4, cs: 1, r: 2, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'แนวตั้ง 2x4 (สตอรี่)',
+                    cols: 2, rows: 4,
+                    cells: [
+                        { c: 1, cs: 1, r: 1, rs: 1 },
+                        { c: 2, cs: 1, r: 1, rs: 1 },
+                        { c: 1, cs: 1, r: 2, rs: 1 },
+                        { c: 2, cs: 1, r: 2, rs: 1 },
+                        { c: 1, cs: 1, r: 3, rs: 1 },
+                        { c: 2, cs: 1, r: 3, rs: 1 },
+                        { c: 1, cs: 1, r: 4, rs: 1 },
+                        { c: 2, cs: 1, r: 4, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'โมเสกอิสระ',
+                    cols: 3, rows: 3,
+                    cells: [
+                        { c: 1, cs: 1, r: 1, rs: 1 },
+                        { c: 2, cs: 1, r: 1, rs: 1 },
+                        { c: 3, cs: 1, r: 1, rs: 1 },
+                        { c: 1, cs: 1, r: 2, rs: 1 },
+                        { c: 2, cs: 1, r: 2, rs: 1 },
+                        { c: 3, cs: 1, r: 2, rs: 1 },
+                        { c: 1, cs: 1, r: 3, rs: 1 },
+                        { c: 2, cs: 2, r: 3, rs: 1 }
+                    ]
+                }
+            ],
+            10: [
+                {
+                    name: 'ตาราง 5x2 แนวนอน',
+                    cols: 5, rows: 2,
+                    cells: [
+                        { c: 1, cs: 1, r: 1, rs: 1 },
+                        { c: 2, cs: 1, r: 1, rs: 1 },
+                        { c: 3, cs: 1, r: 1, rs: 1 },
+                        { c: 4, cs: 1, r: 1, rs: 1 },
+                        { c: 5, cs: 1, r: 1, rs: 1 },
+                        { c: 1, cs: 1, r: 2, rs: 1 },
+                        { c: 2, cs: 1, r: 2, rs: 1 },
+                        { c: 3, cs: 1, r: 2, rs: 1 },
+                        { c: 4, cs: 1, r: 2, rs: 1 },
+                        { c: 5, cs: 1, r: 2, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'ตาราง 2x5 แนวตั้ง',
+                    cols: 2, rows: 5,
+                    cells: [
+                        { c: 1, cs: 1, r: 1, rs: 1 },
+                        { c: 2, cs: 1, r: 1, rs: 1 },
+                        { c: 1, cs: 1, r: 2, rs: 1 },
+                        { c: 2, cs: 1, r: 2, rs: 1 },
+                        { c: 1, cs: 1, r: 3, rs: 1 },
+                        { c: 2, cs: 1, r: 3, rs: 1 },
+                        { c: 1, cs: 1, r: 4, rs: 1 },
+                        { c: 2, cs: 1, r: 4, rs: 1 },
+                        { c: 1, cs: 1, r: 5, rs: 1 },
+                        { c: 2, cs: 1, r: 5, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'Bento 10 ช่อง (เด่นกลาง)',
+                    cols: 4, rows: 4,
+                    cells: [
+                        { c: 1, cs: 1, r: 1, rs: 1 },
+                        { c: 2, cs: 1, r: 1, rs: 1 },
+                        { c: 3, cs: 1, r: 1, rs: 1 },
+                        { c: 4, cs: 1, r: 1, rs: 1 },
+                        { c: 1, cs: 1, r: 2, rs: 1 },
+                        { c: 2, cs: 2, r: 2, rs: 2 },
+                        { c: 4, cs: 1, r: 2, rs: 1 },
+                        { c: 1, cs: 1, r: 3, rs: 1 },
+                        { c: 4, cs: 1, r: 3, rs: 1 },
+                        { c: 1, cs: 4, r: 4, rs: 1 }
+                    ]
+                }
+            ],
+            12: [
+                {
+                    name: 'ตาราง 4x3 แนวนอน',
+                    cols: 4, rows: 3,
+                    cells: [
+                        { c: 1, cs: 1, r: 1, rs: 1 },
+                        { c: 2, cs: 1, r: 1, rs: 1 },
+                        { c: 3, cs: 1, r: 1, rs: 1 },
+                        { c: 4, cs: 1, r: 1, rs: 1 },
+                        { c: 1, cs: 1, r: 2, rs: 1 },
+                        { c: 2, cs: 1, r: 2, rs: 1 },
+                        { c: 3, cs: 1, r: 2, rs: 1 },
+                        { c: 4, cs: 1, r: 2, rs: 1 },
+                        { c: 1, cs: 1, r: 3, rs: 1 },
+                        { c: 2, cs: 1, r: 3, rs: 1 },
+                        { c: 3, cs: 1, r: 3, rs: 1 },
+                        { c: 4, cs: 1, r: 3, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'ตาราง 3x4 แนวตั้ง',
+                    cols: 3, rows: 4,
+                    cells: [
+                        { c: 1, cs: 1, r: 1, rs: 1 },
+                        { c: 2, cs: 1, r: 1, rs: 1 },
+                        { c: 3, cs: 1, r: 1, rs: 1 },
+                        { c: 1, cs: 1, r: 2, rs: 1 },
+                        { c: 2, cs: 1, r: 2, rs: 1 },
+                        { c: 3, cs: 1, r: 2, rs: 1 },
+                        { c: 1, cs: 1, r: 3, rs: 1 },
+                        { c: 2, cs: 1, r: 3, rs: 1 },
+                        { c: 3, cs: 1, r: 3, rs: 1 },
+                        { c: 1, cs: 1, r: 4, rs: 1 },
+                        { c: 2, cs: 1, r: 4, rs: 1 },
+                        { c: 3, cs: 1, r: 4, rs: 1 }
+                    ]
+                },
+                {
+                    name: 'Bento แกลเลอรี 12 ช่อง',
+                    cols: 4, rows: 4,
+                    cells: [
+                        { c: 1, cs: 2, r: 1, rs: 2 },
+                        { c: 3, cs: 1, r: 1, rs: 1 },
+                        { c: 4, cs: 1, r: 1, rs: 1 },
+                        { c: 3, cs: 1, r: 2, rs: 1 },
+                        { c: 4, cs: 1, r: 2, rs: 1 },
+                        { c: 1, cs: 1, r: 3, rs: 1 },
+                        { c: 2, cs: 1, r: 3, rs: 1 },
+                        { c: 3, cs: 2, r: 3, rs: 2 },
+                        { c: 1, cs: 1, r: 4, rs: 1 },
+                        { c: 2, cs: 1, r: 4, rs: 1 }
+                    ].slice(0, 10) // Fallback safety replaced below with exact 12 cells
+                }
+            ]
+        };
+
+        // Ensure 12-photo Bento Gallery has exact 12 non-overlapping cells
+        LAYOUTS_BY_COUNT[12][2] = {
+            name: 'Bento ไฮไลต์ 12 ช่อง',
+            cols: 5, rows: 3,
+            cells: [
+                { c: 1, cs: 2, r: 1, rs: 2 }, // Big hero (4 units)
+                { c: 3, cs: 1, r: 1, rs: 1 },
+                { c: 4, cs: 1, r: 1, rs: 1 },
+                { c: 5, cs: 1, r: 1, rs: 1 },
+                { c: 3, cs: 1, r: 2, rs: 1 },
+                { c: 4, cs: 1, r: 2, rs: 1 },
+                { c: 5, cs: 1, r: 2, rs: 1 },
+                { c: 1, cs: 1, r: 3, rs: 1 },
+                { c: 2, cs: 1, r: 3, rs: 1 },
+                { c: 3, cs: 1, r: 3, rs: 1 },
+                { c: 4, cs: 1, r: 3, rs: 1 },
+                { c: 5, cs: 1, r: 3, rs: 1 }
+            ]
+        };
+
+        // DOM Elements
+        const boardEl = document.getElementById('collage-board');
+        const bulkInput = document.getElementById('bulk-file-input');
+        const singleInput = document.getElementById('single-file-input');
+        const gapSlider = document.getElementById('gap-slider');
+        const gapValueEl = document.getElementById('gap-value');
+        const radiusSlider = document.getElementById('radius-slider');
+        const radiusValueEl = document.getElementById('radius-value');
+
+        // Toast Notification Helper (Replaces alert)
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const colors = {
+                success: 'bg-emerald-600/95 text-white border-emerald-500',
+                warning: 'bg-amber-600/95 text-white border-amber-500',
+                info: 'bg-slate-800/95 text-slate-100 border-slate-700'
+            };
+            toast.className = `px-4 py-2.5 rounded-xl border text-xs font-medium shadow-xl backdrop-blur-md transition-all duration-300 ${colors[type] || colors.info}`;
+            toast.textContent = message;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 2600);
+        }
+
+        // Render Layout Option Buttons Dynamically based on selected photoCount
+        function renderLayoutOptions() {
+            const container = document.getElementById('layout-options');
+            const layouts = LAYOUTS_BY_COUNT[state.photoCount];
+            document.getElementById('layout-section-title').textContent = `รูปแบบการจัดวาง (${state.photoCount} ช่อง)`;
+            document.getElementById('bulk-btn-text').textContent = `อัปโหลดทีเดียว ${state.photoCount} รูป`;
+
+            container.innerHTML = '';
+
+            layouts.forEach((layout, idx) => {
+                const isActive = idx === state.layoutIndex;
+                const btn = document.createElement('button');
+                btn.className = `layout-btn group p-3 rounded-xl border-2 text-left transition flex flex-col gap-2 cursor-pointer ${
+                    isActive 
+                        ? 'border-indigo-500 bg-indigo-500/10' 
+                        : 'border-slate-800 hover:border-slate-700 bg-slate-800/50'
+                }`;
+
+                // Build miniature visual preview of the grid
+                const miniGrid = document.createElement('div');
+                miniGrid.className = 'w-full h-12 bg-slate-800 rounded-lg p-1 grid gap-0.5';
+                miniGrid.style.gridTemplateColumns = `repeat(${layout.cols}, minmax(0, 1fr))`;
+                miniGrid.style.gridTemplateRows = `repeat(${layout.rows}, minmax(0, 1fr))`;
+
+                layout.cells.forEach(cell => {
+                    const miniCell = document.createElement('div');
+                    miniCell.style.gridColumn = `${cell.c} / span ${cell.cs}`;
+                    miniCell.style.gridRow = `${cell.r} / span ${cell.rs}`;
+                    const isHero = cell.cs > 1 || cell.rs > 1;
+                    miniCell.className = isHero 
+                        ? 'bg-indigo-400/80 rounded-[2px]' 
+                        : 'bg-slate-600 rounded-[2px]';
+                    miniGrid.appendChild(miniCell);
+                });
+
+                const label = document.createElement('span');
+                label.className = `text-xs font-medium truncate w-full ${isActive ? 'text-white' : 'text-slate-300'}`;
+                label.textContent = layout.name;
+
+                btn.appendChild(miniGrid);
+                btn.appendChild(label);
+
+                btn.addEventListener('click', () => {
+                    state.layoutIndex = idx;
+                    renderLayoutOptions();
+                    renderBoard();
+                });
+
+                container.appendChild(btn);
+            });
+        }
+
+        // Render the Interactive Board
+        function renderBoard() {
+            const layoutConfig = LAYOUTS_BY_COUNT[state.photoCount][state.layoutIndex];
+
+            // Apply Aspect Ratio & Sizing to Board
+            boardEl.classList.remove('aspect-square', 'aspect-[4/5]', 'aspect-video', 'max-w-[560px]', 'max-w-[460px]', 'max-w-[680px]');
+            if (state.ratio === '1:1') {
+                boardEl.classList.add('aspect-square', 'max-w-[560px]');
+            } else if (state.ratio === '4:5') {
+                boardEl.classList.add('aspect-[4/5]', 'max-w-[460px]');
+            } else if (state.ratio === '16:9') {
+                boardEl.classList.add('aspect-video', 'max-w-[680px]');
+            }
+
+            // Apply Grid Columns/Rows, Gap, Padding, Background
+            boardEl.style.gridTemplateColumns = `repeat(${layoutConfig.cols}, minmax(0, 1fr))`;
+            boardEl.style.gridTemplateRows = `repeat(${layoutConfig.rows}, minmax(0, 1fr))`;
+            boardEl.style.gap = `${state.gap}px`;
+            boardEl.style.padding = `${state.gap}px`;
+            boardEl.style.backgroundColor = state.bgColor;
+
+            // Clear & Rebuild Active Slots
+            boardEl.innerHTML = '';
+
+            for (let i = 0; i < state.photoCount; i++) {
+                const cellDef = layoutConfig.cells[i];
+                const slot = document.createElement('div');
+                
+                slot.style.gridColumn = `${cellDef.c} / span ${cellDef.cs}`;
+                slot.style.gridRow = `${cellDef.r} / span ${cellDef.rs}`;
+                slot.style.borderRadius = `${state.radius}px`;
+                
+                slot.className = 'relative overflow-hidden group cursor-pointer transition-all duration-200 flex items-center justify-center bg-slate-200/80 hover:ring-2 hover:ring-indigo-500';
+                slot.setAttribute('draggable', state.imageUrls[i] ? 'true' : 'false');
+                slot.dataset.index = i;
+
+                // If image exists in this slot
+                if (state.imageUrls[i]) {
+                    const img = document.createElement('img');
+                    img.src = state.imageUrls[i];
+                    img.className = 'w-full h-full object-cover pointer-events-none select-none';
+                    slot.appendChild(img);
+
+                    // Hover Overlay Controls
+                    const overlay = document.createElement('div');
+                    overlay.className = 'absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2';
+                    overlay.innerHTML = `
+                        <span class="px-2.5 py-1 bg-white/90 text-slate-900 rounded-lg text-xs font-semibold shadow">เปลี่ยนรูป</span>
+                        <button type="button" class="remove-slot-btn p-1.5 bg-rose-500 hover:bg-rose-600 text-white rounded-lg shadow" title="ลบรูปนี้">
+                            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                        </button>
+                    `;
+                    slot.appendChild(overlay);
+
+                    // Remove single image button handler
+                    overlay.querySelector('.remove-slot-btn').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        state.images[i] = null;
+                        state.imageUrls[i] = null;
+                        renderBoard();
+                    });
+                } else {
+                    // Empty Slot Placeholder
+                    slot.innerHTML = `
+                        <div class="flex flex-col items-center justify-center text-slate-500 group-hover:text-indigo-600 transition-colors p-2 text-center">
+                            <div class="w-8 h-8 rounded-full bg-white/80 shadow-sm flex items-center justify-center mb-1">
+                                <span class="text-sm font-bold">+</span>
+                            </div>
+                            <span class="text-[11px] font-medium">รูปที่ ${i + 1}</span>
+                        </div>
+                    `;
+                }
+
+                // Click to upload single image
+                slot.addEventListener('click', () => {
+                    state.activeSlotIndex = i;
+                    singleInput.click();
+                });
+
+                // Drag & Drop to swap images between slots
+                slot.addEventListener('dragstart', (e) => {
+                    state.draggedSlotIndex = i;
+                    slot.classList.add('opacity-50');
+                });
+
+                slot.addEventListener('dragend', () => {
+                    slot.classList.remove('opacity-50');
+                    state.draggedSlotIndex = null;
+                });
+
+                slot.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    slot.classList.add('ring-2', 'ring-purple-500');
+                });
+
+                slot.addEventListener('dragleave', () => {
+                    slot.classList.remove('ring-2', 'ring-purple-500');
+                });
+
+                slot.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    slot.classList.remove('ring-2', 'ring-purple-500');
+                    
+                    // Handle external file drop directly onto a slot
+                    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                        loadImageToSlot(e.dataTransfer.files[0], i);
+                        return;
+                    }
+
+                    // Handle swapping two slots
+                    const fromIdx = state.draggedSlotIndex;
+                    const toIdx = i;
+                    if (fromIdx !== null && fromIdx !== toIdx) {
+                        [state.images[fromIdx], state.images[toIdx]] = [state.images[toIdx], state.images[fromIdx]];
+                        [state.imageUrls[fromIdx], state.imageUrls[toIdx]] = [state.imageUrls[toIdx], state.imageUrls[fromIdx]];
+                        renderBoard();
+                        showToast('สลับตำแหน่งรูปภาพแล้ว', 'info');
+                    }
+                });
+
+                boardEl.appendChild(slot);
+            }
+        }
+
+        // Load File into a Specific Slot
+        function loadImageToSlot(file, index) {
+            if (!file || !file.type.startsWith('image/')) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    state.images[index] = img;
+                    state.imageUrls[index] = e.target.result;
+                    renderBoard();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Single File Input Listener
+        singleInput.addEventListener('change', (e) => {
+            if (e.target.files && e.target.files[0] && state.activeSlotIndex !== null) {
+                loadImageToSlot(e.target.files[0], state.activeSlotIndex);
+            }
+            singleInput.value = '';
+        });
+
+        // Bulk Upload Button & Input Listener (Up to selected photoCount at once)
+        document.getElementById('btn-upload-bulk').addEventListener('click', () => {
+            bulkInput.click();
+        });
+
+        bulkInput.addEventListener('change', (e) => {
+            const files = Array.from(e.target.files).slice(0, state.photoCount);
+            if (files.length === 0) return;
+
+            files.forEach((file, idx) => {
+                loadImageToSlot(file, idx);
+            });
+            showToast(`นำเข้ารูปภาพ ${files.length} รูปเรียบร้อย!`, 'success');
+            bulkInput.value = '';
+        });
+
+        // Generate 12 Aesthetic Sample Images using Offscreen Canvas
+        function loadSampleImages() {
+            const palettes = [
+                ['#FF9A9E', '#FECFEF', '01 • SUNSET'],
+                ['#A18CD1', '#FBC2EB', '02 • DREAM'],
+                ['#84FAB0', '#8FD3F4', '03 • OCEAN'],
+                ['#FCCB90', '#D57EEB', '04 • VIBES'],
+                ['#E0C3FC', '#8EC5FC', '05 • SKYLINE'],
+                ['#F093FB', '#F5576C', '06 • SUMMER'],
+                ['#4FACFE', '#00F2FE', '07 • BREEZE'],
+                ['#43E97B', '#38F9D7', '08 • NATURE'],
+                ['#FA709A', '#FEE140', '09 • GOLDEN'],
+                ['#30CFD0', '#330867', '10 • MIDNIGHT'],
+                ['#FF0844', '#FFB199', '11 • CORAL'],
+                ['#00C6FB', '#005BEA', '12 • DEEP BLUE']
+            ];
+
+            let loadedCount = 0;
+            palettes.forEach((pal, idx) => {
+                const c = document.createElement('canvas');
+                c.width = 600;
+                c.height = 600;
+                const ctx = c.getContext('2d');
+
+                // Gradient background
+                const grad = ctx.createLinearGradient(0, 0, 600, 600);
+                grad.addColorStop(0, pal[0]);
+                grad.addColorStop(1, pal[1]);
+                ctx.fillStyle = grad;
+                ctx.fillRect(0, 0, 600, 600);
+
+                // Subtle decorative circle
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.18)';
+                ctx.beginPath();
+                ctx.arc(300, 270, 140, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Label text
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+                ctx.font = 'bold 34px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(pal[2], 300, 300);
+
+                const dataUrl = c.toDataURL('image/png');
+                const img = new Image();
+                img.onload = () => {
+                    state.images[idx] = img;
+                    state.imageUrls[idx] = dataUrl;
+                    loadedCount++;
+                    if (loadedCount === palettes.length) renderBoard();
+                };
+                img.src = dataUrl;
+            });
+            showToast(`โหลดชุดภาพตัวอย่าง ${state.photoCount} ช่องแล้ว`, 'info');
+        }
+
+        // Photo Count Selector Buttons
+        document.querySelectorAll('.count-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.count-btn').forEach(b => {
+                    b.classList.remove('bg-indigo-600', 'text-white');
+                    b.classList.add('bg-slate-800', 'text-slate-300');
+                });
+                btn.classList.remove('bg-slate-800', 'text-slate-300');
+                btn.classList.add('bg-indigo-600', 'text-white');
+
+                state.photoCount = parseInt(btn.dataset.count, 10);
+                state.layoutIndex = 0; // Reset to first layout of that count
+                renderLayoutOptions();
+                renderBoard();
+            });
+        });
+
+        // Ratio Selection Buttons
+        function setRatio(ratio) {
+            state.ratio = ratio;
+            document.querySelectorAll('.ratio-btn').forEach(b => {
+                if (b.dataset.ratio === ratio) {
+                    b.classList.remove('bg-slate-800', 'text-slate-300');
+                    b.classList.add('bg-indigo-600', 'text-white');
+                } else {
+                    b.classList.remove('bg-indigo-600', 'text-white');
+                    b.classList.add('bg-slate-800', 'text-slate-300');
+                }
+            });
+            renderBoard();
+        }
+
+        document.querySelectorAll('.ratio-btn').forEach(btn => {
+            btn.addEventListener('click', () => setRatio(btn.dataset.ratio));
+        });
+
+        // Sliders (Gap & Radius)
+        gapSlider.addEventListener('input', (e) => {
+            state.gap = parseInt(e.target.value, 10);
+            gapValueEl.textContent = `${state.gap} px`;
+            renderBoard();
+        });
+
+        radiusSlider.addEventListener('input', (e) => {
+            state.radius = parseInt(e.target.value, 10);
+            radiusValueEl.textContent = `${state.radius} px`;
+            renderBoard();
+        });
+
+        // Background Color Swatches & Picker
+        document.querySelectorAll('.color-swatch').forEach(swatch => {
+            swatch.addEventListener('click', () => {
+                document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('ring-2', 'ring-indigo-500'));
+                swatch.classList.add('ring-2', 'ring-indigo-500');
+                state.bgColor = swatch.dataset.color;
+                renderBoard();
+            });
+        });
+
+        document.getElementById('custom-color-picker').addEventListener('input', (e) => {
+            state.bgColor = e.target.value;
+            renderBoard();
+        });
+
+        // Sample & Clear Buttons
+        document.getElementById('btn-sample').addEventListener('click', loadSampleImages);
+        
+        document.getElementById('btn-clear').addEventListener('click', () => {
+            state.images = Array(12).fill(null);
+            state.imageUrls = Array(12).fill(null);
+            renderBoard();
+            showToast('ล้างรูปภาพทั้งหมดแล้ว', 'info');
+        });
+
+        // Helper: Draw Rounded Rectangle Path on Canvas
+        function roundRectPath(ctx, x, y, width, height, radius) {
+            const r = Math.min(radius, width / 2, height / 2);
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + width, y, x + width, y + height, r);
+            ctx.arcTo(x + width, y + height, x, y + height, r);
+            ctx.arcTo(x, y + height, x, y, r);
+            ctx.arcTo(x, y, x + width, y, r);
+            ctx.closePath();
+        }
+
+        // Helper: Draw Image with "object-fit: cover" behavior on Canvas
+        function drawImageCover(ctx, img, x, y, w, h) {
+            const imgRatio = img.width / img.height;
+            const boxRatio = w / h;
+            let sx, sy, sw, sh;
+
+            if (imgRatio > boxRatio) {
+                sh = img.height;
+                sw = img.height * boxRatio;
+                sx = (img.width - sw) / 2;
+                sy = 0;
+            } else {
+                sw = img.width;
+                sh = img.width / boxRatio;
+                sx = 0;
+                sy = (img.height - sh) / 2;
+            }
+            ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+        }
+
+        // Modal Controls for Mobile / Fallback Saving
+        const saveModal = document.getElementById('save-modal');
+        const modalPreviewImg = document.getElementById('modal-preview-img');
+        const btnNativeShare = document.getElementById('btn-native-share');
+        const btnDirectDownload = document.getElementById('btn-direct-download');
+        let currentExportBlob = null;
+        let currentExportFilename = 'collage.png';
+
+        document.getElementById('btn-close-modal').addEventListener('click', () => {
+            saveModal.classList.add('hidden');
+            saveModal.classList.remove('flex');
+        });
+
+        btnNativeShare.addEventListener('click', async () => {
+            if (!currentExportBlob) return;
+            try {
+                const file = new File([currentExportBlob], currentExportFilename, { type: 'image/png' });
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: 'Collage Studio'
+                    });
+                }
+            } catch (err) {
+                // User cancelled share or unsupported
+            }
+        });
+
+        // Export High-Resolution Single Image (Mobile & Desktop Compatible)
+        document.getElementById('btn-download').addEventListener('click', () => {
+            const activeImages = state.images.slice(0, state.photoCount);
+            const hasAnyImage = activeImages.some(img => img !== null);
+            if (!hasAnyImage) {
+                showToast('กรุณาเพิ่มรูปภาพอย่างน้อย 1 รูปก่อนบันทึกครับ', 'warning');
+                return;
+            }
+
+            showToast('กำลังสร้างรูปภาพความละเอียดสูง...', 'info');
+
+            const canvas = document.getElementById('export-canvas');
+            const ctx = canvas.getContext('2d');
+
+            // High-Res Export Dimensions
+            let exportW = 2000;
+            let exportH = 2000;
+            if (state.ratio === '4:5') {
+                exportW = 1800;
+                exportH = 2250;
+            } else if (state.ratio === '16:9') {
+                exportW = 2400;
+                exportH = 1350;
+            }
+
+            canvas.width = exportW;
+            canvas.height = exportH;
+
+            // Scale factor relative to preview board (~560px)
+            const scale = exportW / 560;
+            const gap = state.gap * scale;
+            const radius = state.radius * scale;
+
+            // Fill Background
+            ctx.fillStyle = state.bgColor;
+            ctx.fillRect(0, 0, exportW, exportH);
+
+            const layoutConfig = LAYOUTS_BY_COUNT[state.photoCount][state.layoutIndex];
+            const cols = layoutConfig.cols;
+            const rows = layoutConfig.rows;
+
+            const innerW = exportW - gap * 2;
+            const innerH = exportH - gap * 2;
+            const cellW = (innerW - gap * (cols - 1)) / cols;
+            const cellH = (innerH - gap * (rows - 1)) / rows;
+
+            // Draw each active cell
+            for (let i = 0; i < state.photoCount; i++) {
+                const cell = layoutConfig.cells[i];
+                const x = gap + (cell.c - 1) * (cellW + gap);
+                const y = gap + (cell.r - 1) * (cellH + gap);
+                const w = cell.cs * cellW + (cell.cs - 1) * gap;
+                const h = cell.rs * cellH + (cell.rs - 1) * gap;
+
+                ctx.save();
+                roundRectPath(ctx, x, y, w, h, radius);
+                ctx.clip();
+
+                if (state.images[i]) {
+                    drawImageCover(ctx, state.images[i], x, y, w, h);
+                } else {
+                    // Empty slot subtle fill on export
+                    ctx.fillStyle = 'rgba(148, 163, 184, 0.25)';
+                    ctx.fillRect(x, y, w, h);
+                }
+                ctx.restore();
+            }
+
+            currentExportFilename = `collage-${state.photoCount}photos-${Date.now()}.png`;
+
+            // Use toBlob instead of large toDataURL (Fixes mobile Safari/Chrome download block)
+            canvas.toBlob(async (blob) => {
+                if (!blob) {
+                    showToast('เกิดข้อผิดพลาดในการสร้างไฟล์รูปภาพ', 'warning');
+                    return;
+                }
+
+                currentExportBlob = blob;
+                const blobUrl = URL.createObjectURL(blob);
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+                // Prepare fallback modal preview
+                modalPreviewImg.src = blobUrl;
+                btnDirectDownload.href = blobUrl;
+                btnDirectDownload.download = currentExportFilename;
+
+                // Show Native Share button if mobile browser supports sharing files
+                const testFile = new File([blob], currentExportFilename, { type: 'image/png' });
+                if (navigator.canShare && navigator.canShare({ files: [testFile] })) {
+                    btnNativeShare.classList.remove('hidden');
+                } else {
+                    btnNativeShare.classList.add('hidden');
+                }
+
+                // Trigger standard anchor download (attached to DOM for mobile compatibility)
+                const link = document.createElement('a');
+                link.style.display = 'none';
+                link.download = currentExportFilename;
+                link.href = blobUrl;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                // On mobile devices, always open the save modal so users can tap-and-hold or use Share Sheet
+                if (isMobile) {
+                    saveModal.classList.remove('hidden');
+                    saveModal.classList.add('flex');
+                } else {
+                    showToast(`บันทึกภาพคอลลาจ ${state.photoCount} ช่องสำเร็จ!`, 'success');
+                }
+            }, 'image/png', 1.0);
+        });
+
+        // Initial Setup
+        renderLayoutOptions();
+        loadSampleImages();
+    </script>
+</body>
+</html>
